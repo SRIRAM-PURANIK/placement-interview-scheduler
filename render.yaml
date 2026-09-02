@@ -2,6 +2,7 @@ services:
   - type: web
     name: placement-backend
     runtime: node
+    plan: free
     rootDir: server
     buildCommand: npm install
     startCommand: npm start
@@ -14,6 +15,7 @@ services:
   - type: web
     name: placement-frontend
     runtime: node
+    plan: free
     rootDir: Frontend
     buildCommand: npm install && npm run build
     startCommand: npm run preview -- --host 0.0.0.0 --port 10000
