@@ -1,8 +1,22 @@
-staticSites:
-  - name: placement-frontend
+services:
+  - type: web
+    name: placement-backend
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGO_URI
+        sync: false
+
+  - type: web
+    name: placement-frontend
+    runtime: node
     rootDir: Frontend
     buildCommand: npm install && npm run build
-    publishDir: dist
+    startCommand: npm run preview -- --host 0.0.0.0 --port 10000
     envVars:
       - key: VITE_API_URL
         fromService:
