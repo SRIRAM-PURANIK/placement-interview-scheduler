@@ -1,0 +1,29 @@
+services:
+  # 1. The Backend Server
+  - type: web
+    name: placement-backend
+    runtime: node
+    repo: https://github.com
+    rootDirectory: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGO_URI
+        sync: false # Render will ask you to paste your database link when you deploy
+
+  # 2. The Static Frontend Website
+  - type: web
+    name: placement-frontend
+    runtime: node
+    repo: https://github.com
+    rootDirectory: Frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview -- --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: placement-backend
+          property: url
