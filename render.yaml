@@ -11,8 +11,8 @@ services:
       - key: MONGO_URI
         sync: false
 
-  - type: static
-    name: placement-frontend
+staticSites:
+  - name: placement-frontend
     rootDir: Frontend
     buildCommand: npm install && npm run build
     publishDir: dist
@@ -21,4 +21,4 @@ services:
         fromService:
           type: web
           name: placement-backend
-          property: host
+          property: url
