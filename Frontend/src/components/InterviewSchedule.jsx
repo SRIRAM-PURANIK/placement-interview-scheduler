@@ -10,7 +10,8 @@ function InterviewSchedule() {
     try {
       setLoading(true);
 
-      let url = `http://localhost:5000/api/interviews?status=${status}`;
+  let url = `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/interviews?status=${status}`;
+
 
       if (search.trim()) {
         url += `&search=${encodeURIComponent(search)}`;

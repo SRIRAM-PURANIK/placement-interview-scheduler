@@ -5,7 +5,8 @@ import MetricsCards from "./components/MetricsCards";
 import ScheduleTable from "./components/ScheduleTable";
 import DisruptionPanel from "./components/DisruptionPanel";
 
-const API = "http://localhost:5000/api";
+// Automatically uses Railway variable online, and localhost when offline
+const API = `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api`;
 
 function App() {
   const [metrics, setMetrics] = useState(null);

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+// Automatically uses Railway variable online, and localhost when offline
+const API = `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api`;
 
 function DisruptionPanel({ refreshDashboard }) {
   const [students, setStudents] = useState([]);
@@ -134,7 +135,6 @@ function DisruptionPanel({ refreshDashboard }) {
       );
 
       setResult(response.data.data);
-
       await refreshDashboard();
     } catch (error) {
       alert(
@@ -147,254 +147,62 @@ function DisruptionPanel({ refreshDashboard }) {
   };
 
   return (
-    <div className="disruption-section">
-      <div className="section-header">
-        <div>
-          <h2>Disruption & Replanning</h2>
-
-          <p>
-            Simulate real-world placement disruptions and
-            automatically replan affected interviews.
-          </p>
-        </div>
-      </div>
-
+    <div className="disruption-panel">
+      <h3>Disruption & Replanning</h3>
+      <p>Simulate real-world placement disruptions and automatically replan affected interviews.</p>
+      
       <div className="disruption-grid">
-
         {/* STUDENT WITHDRAWAL */}
         <div className="disruption-card">
-          <h3>Student Withdrawal</h3>
-
-          <p>
-            Cancel all scheduled interviews for a student.
-          </p>
-
-          <select
-            value={selectedStudent}
-            onChange={(e) =>
-              setSelectedStudent(e.target.value)
-            }
-          >
-            <option value="">
-              Select Student
-            </option>
-
-            {students.map((student) => (
-              <option
-                key={student._id}
-                value={student._id}
-              >
-                {student.name} — CGPA {student.cgpa}
-              </option>
-            ))}
+          <h4>Student Withdrawal</h4>
+          <p>Cancel all scheduled interviews for a student.</p>
+          <select value={selectedStudent} onChange={(e) => setSelectedStudent(e.target.value)}>
+            <option value="">Select Student</option>
+            {students.map(s => <option key={s._id || s.id} value={s._id || s.id}>{s.name}</option>)}
           </select>
-
-          <button
-            onClick={handleStudentWithdraw}
-            disabled={loading}
-          >
-            Withdraw Student
-          </button>
+          <button onClick={handleStudentWithdraw} disabled={loading}>Withdraw Student</button>
         </div>
 
         {/* COMPANY DELAY */}
         <div className="disruption-card">
-          <h3>Company Delay</h3>
-
-          <p>
-            Move affected interviews when a company arrives late.
-          </p>
-
-          <select
-            value={selectedCompany}
-            onChange={(e) =>
-              setSelectedCompany(e.target.value)
-            }
-          >
-            <option value="">
-              Select Company
-            </option>
-
-            {companies.map((company) => (
-              <option
-                key={company._id}
-                value={company._id}
-              >
-                {company.name}
-              </option>
-            ))}
+          <h4>Company Delay</h4>
+          <p>Move affected interviews when a company arrives late.</p>
+          <select value={selectedCompany} onChange={(e) => setSelectedCompany(e.target.value)}>
+            <option value="">Select Company</option>
+            {companies.map(c => <option key={c._id || c.id} value={c._id || c.id}>{c.name}</option>)}
           </select>
-
-          <input
-            type="number"
-            min="1"
-            value={delayHours}
-            onChange={(e) =>
-              setDelayHours(e.target.value)
-            }
-            placeholder="Delay hours"
-          />
-
-          <button
-            onClick={handleCompanyDelay}
-            disabled={loading}
-          >
-            Replan Company Delay
-          </button>
+          <input type="number" min="1" value={delayHours} onChange={(e) => setDelayHours(e.target.value)} />
+          <button onClick={handleCompanyDelay} disabled={loading}>Replan Company Delay</button>
         </div>
 
         {/* ROOM UNAVAILABLE */}
         <div className="disruption-card">
-          <h3>Room Unavailable</h3>
-
-          <p>
-            Reassign interviews to another available room.
-          </p>
-
-          <select
-            value={selectedRoom}
-            onChange={(e) =>
-              setSelectedRoom(e.target.value)
-            }
-          >
-            <option value="">
-              Select Room
-            </option>
-
-            {rooms.map((room) => (
-              <option
-                key={room._id}
-                value={room._id}
-              >
-                {room.name}
-                {room.available
-                  ? " — Available"
-                  : " — Unavailable"}
-              </option>
-            ))}
+          <h4>Room Unavailable</h4>
+          <p>Reassign interviews to another available room.</p>
+          <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)}>
+            <option value="">Select Room</option>
+            {rooms.map(r => <option key={r._id || r.id} value={r._id || r.id}>{r.name || r.roomNumber}</option>)}
           </select>
-
-          <button
-            onClick={handleRoomUnavailable}
-            disabled={loading}
-          >
-            Make Room Unavailable
-          </button>
+          <button onClick={handleRoomUnavailable} disabled={loading}>Make Room Unavailable</button>
         </div>
 
-        {/* PANEL DROP */}
+        {/* PANEL DROP OUT */}
         <div className="disruption-card">
-          <h3>Panel Drop-out</h3>
-
-          <p>
-            Move interviews to another available panel.
-          </p>
-
-          <select
-            value={selectedCompany}
-            onChange={(e) =>
-              setSelectedCompany(e.target.value)
-            }
-          >
-            <option value="">
-              Select Company
-            </option>
-
-            {companies.map((company) => (
-              <option
-                key={company._id}
-                value={company._id}
-              >
-                {company.name}
-              </option>
-            ))}
+          <h4>Panel Drop-out</h4>
+          <p>Move interviews to another available panel.</p>
+          <select value={selectedCompany} onChange={(e) => setSelectedCompany(e.target.value)}>
+            <option value="">Select Company</option>
+            {companies.map(c => <option key={c._id || c.id} value={c._id || c.id}>{c.name}</option>)}
           </select>
-
-          <input
-            type="number"
-            min="1"
-            value={panelNumber}
-            onChange={(e) =>
-              setPanelNumber(e.target.value)
-            }
-            placeholder="Panel Number"
-          />
-
-          <button
-            onClick={handlePanelDrop}
-            disabled={loading}
-          >
-            Drop Panel
-          </button>
+          <input type="number" min="1" value={panelNumber} onChange={(e) => setPanelNumber(e.target.value)} />
+          <button onClick={handlePanelDrop} disabled={loading}>Drop Panel</button>
         </div>
-
       </div>
 
-      {loading && (
-        <div className="processing">
-          Processing disruption and replanning...
-        </div>
-      )}
-
       {result && (
-        <div className="result-box">
-          <h3>
-            Replanning Result: {result.disruption}
-          </h3>
-
-          <div className="result-summary">
-            {result.summary &&
-              Object.entries(result.summary).map(
-                ([key, value]) => (
-                  <div key={key}>
-                    <span>
-                      {key.replace(/([A-Z])/g, " $1")}
-                    </span>
-
-                    <strong>{value}</strong>
-                  </div>
-                )
-              )}
-          </div>
-
-          {result.changes &&
-            result.changes.length > 0 && (
-              <>
-                <h4>Changes Made</h4>
-
-                <div className="changes-list">
-                  {result.changes.slice(0, 20).map(
-                    (change, index) => (
-                      <div
-                        className="change-item"
-                        key={index}
-                      >
-                        <strong>
-                          {change.action}
-                        </strong>
-
-                        <span>
-                          Interview:{" "}
-                          {change.interviewId}
-                        </span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </>
-            )}
-
-          {result.unscheduled &&
-            result.unscheduled.length > 0 && (
-              <>
-                <h4>Could Not Be Scheduled</h4>
-
-                <p>
-                  {result.unscheduled.length} interview(s)
-                  could not be accommodated.
-                </p>
-              </>
-            )}
+        <div className="result-alert">
+          <h5>Replanning Complete</h5>
+          <p>Affected: {result.affectedInterviewsCount || 0} interviews.</p>
         </div>
       )}
     </div>
