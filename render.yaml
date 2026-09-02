@@ -11,15 +11,14 @@ services:
       - key: MONGO_URI
         sync: false
 
-  - type: web
+  - type: static
     name: placement-frontend
-    runtime: node
     rootDir: Frontend
     buildCommand: npm install && npm run build
-    startCommand: npm run preview -- --host 0.0.0.0 --port $PORT
+    publishDir: dist
     envVars:
       - key: VITE_API_URL
         fromService:
           type: web
           name: placement-backend
-          property: url
+          property: host
