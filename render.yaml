@@ -2,7 +2,7 @@ services:
   - type: web
     name: placement-backend
     runtime: node
-    rootDirectory: server
+    rootDir: server
     buildCommand: npm install
     startCommand: npm start
     envVars:
@@ -14,7 +14,7 @@ services:
   - type: web
     name: placement-frontend
     runtime: node
-    rootDirectory: Frontend
+    rootDir: Frontend
     buildCommand: npm install && npm run build
     startCommand: npm run preview -- --host 0.0.0.0 --port $PORT
     envVars:
