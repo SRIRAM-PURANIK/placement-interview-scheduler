@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// Automatically uses Railway variable online, and localhost when offline
 const API = `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api`;
 
 function DisruptionPanel({ refreshDashboard }) {
